@@ -1,35 +1,56 @@
-mi_diccionario = {}
+registro_diccionario = {}
+list_pendiente = []
+
 import os
 sw = True
 
-def fnt_agregar(diccionario,cod_persona,nombre,edad,contacto,sexo,extracto,correo):
-    if cod_persona == '' or nombre == '' or edad == '' or contacto == '' or sexo == '' or extracto == '' or correo =='':
+
+
+
+def fnt_añadir(diccionario, codigo, nombres, contacto, correo, edad, estrato, sexo, direccion):
+    if not all([codigo, nombres, contacto, correo, edad, estrato, sexo, direccion]):
         enter = input('Debe diligenciar toda la información solicitada <ENTER>')
     else:
-        diccionario[cod_persona] = {'nombre': nombre, 'edad': edad, 'contacto': contacto, 'sexo': sexo, 'extracto': extracto, 'correo': correo}
-        enter = input(f'\nLa persona {nombre} ha sido registrada con éxito <ENTER>')   
-        
+        diccionario[codigo] = {'Nombre': nombres, 'Contacto': contacto, 'Correo': correo, 'Edad': edad, 'Estrato': estrato, 'Sexo': sexo, 'Direccion': direccion}
+        enter = input(f'\nLa persona {nombres} ha sido registrada con éxito <ENTER>')
+
 def fnt_selector(op):
     if op == '1':
         os.system('cls')
-        nombre = input('Nombre:  ')
-        edad = input('Edad:  ')
-        contacto = input('Telefono:  ')
-        sexo = input('Sexo [M/F]:  ')
-        extracto = input('Extracto:  ')
-        correo = input('Correo: ')
-        fnt_agregar(mi_diccionario, nombre, edad, contacto,  sexo, extracto, correo)
+        codigo = input('Ingrese su codigo:')
+        nombres = input('Nombres completos:  ')
+        contacto = input('Número de contacto:   ')
+        correo = input('Ingrese su correo:  ')
+        direccion = input('Ingrese su dirección: ')
+        sexo = input('Sexo (M/F):  ')
+        edad = int(input('ingrese su Edad: ->  '))
+        estrato = int(input('Ingrese su estrato: -> '))
         
+        if (sexo == 'M' and 15 <= edad <= 25 and estrato in (1, 2)) or (sexo == 'F' and 20 <= edad <= 35 and estrato in (1, 2, 3, 4)):
+            fnt_añadir(registro_diccionario, codigo, nombres, contacto, correo, edad, estrato, sexo, direccion)
+        else:
+            print('No cumple con los criterios de registro, pero agregaremos su contacto a la lista "Pendiente".')
+            list_pendiente.append(contacto)
+        enter = input('\nPresione <ENTER> para continuar...\n')
+def fnt_mostrar_pendiente():
+    os.system('cls')
+    print('\nLista de contactos pendientes:\n')
+    for contacto in list_pendiente:
+        print(f'- {contacto}')
+    enter = input('\nPresione <ENTER> para continuar')
+
 while sw == True:
     os.system('cls')
-    opcion = input('1. Registrar\n2. Mostrar\n3. Salir\n- >  ')
-    if opcion == '1':
+    opcion = input('1. Registrar\n2. Mostrar\n3. Mostrar pendientes\n4. Salir\n- >  ')
+    if opcion == "1":
         fnt_selector(opcion)
     elif opcion == '2':
         os.system('cls')
-        print('\nCantidad de registros: ',len(mi_diccionario),'\n')
-        for clave, valor in mi_diccionario.items():
+        print('\nCantidad de registros: ',len(registro_diccionario),'\n')
+        for clave, valor in registro_diccionario.items():
             print(f"{clave}: {valor}")
-        enter = input('\n\nPresione ENTER para continuar...')
+        enter = input('\nPresione <ENTER> para continuar')
     elif opcion == '3':
+        fnt_mostrar_pendiente()
+    elif opcion == '4':
         sw = False
